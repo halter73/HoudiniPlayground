@@ -9,7 +9,7 @@ app.MapAction([HttpGet("/")] () : Todo => new(Id: 0, Name: "Play more!", IsCompl
 
 app.MapAction([HttpGet("/id/{id?}")] ([FromRoute] int? id) : IResult => 
     id is null ?
-    new StatusCodePagesExtensions(404) :
+    new StatusCodeResult(404) :
     new JsonResult(new Todo(Id: id.Value, Name: "From id!", IsComplete: false)));
 
 await app.RunAsync();
