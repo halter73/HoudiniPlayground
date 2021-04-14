@@ -5,20 +5,17 @@ using Microsoft.AspNetCore.Mvc;
 
 var app = WebApplication.Create(args);
 
-[HttpGet("/")]
 Todo GetTodo() => new(Id: 0, Name: "Play more!", IsComplete: false);
-app.MapAction((Func<Todo>)GetTodo);
+app.MapGet("/", (Func<Todo>)GetTodo);
 
-[HttpPost("/")]
-Todo EchoTodo([FromBody] Todo todo) => todo;
-app.MapAction((Func<Todo, Todo>)EchoTodo);
+Todo EchoTodo(Todo todo) => todo;
+app.MapPost("/", (Func<Todo, Todo>)EchoTodo);
 
-[HttpGet("/id/{id?}")]
-IResult GetTodoFromId([FromRoute] int? id) =>
+IResult GetTodoFromId(int? id) =>
     id is null ?
     new StatusCodeResult(404) :
     new JsonResult(new Todo(Id: id.Value, Name: "From id!", IsComplete: false));
-app.MapAction((Func<int?, IResult>)GetTodoFromId);
+app.MapGet("/id/{id?}", (Func<int?, IResult>)GetTodoFromId);
 
 await app.RunAsync();
 
